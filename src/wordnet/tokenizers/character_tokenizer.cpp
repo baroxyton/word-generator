@@ -10,15 +10,16 @@ namespace tokenizers{
 		std::unordered_set<char> char_set;
 		for(char file_char : file_content){
 			if(char_set.find(file_char) == char_set.end()){
-				char_map.insert(file_char)
+				char_set.insert(file_char);
 			}
-			std::vector<token> result;
-			// Leave 0-9 for special tokens
-			int i = 10;
-			for(const auto& uniq_char: char_set){
-				result.push_back(token{i, std::string{unique_char}});
-			}
-			return result;
 		}	
+		std::vector<token> result;
+
+		// Leave 0-15 for special tokens
+		int i = SPECIAL_TOKEN_OFFSET;
+		for(const auto& uniq_char: char_set){
+			result.push_back(token{i, std::string{unique_char}});
+		}
+		return result;
 	}	
 }

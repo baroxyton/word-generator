@@ -1,4 +1,6 @@
 #pragma once
 #include "tokenize.hpp"
 #include <vector>
-std::vector<tokenizers::token> tokenizers::character_tokenizer(std::string filecontent);
+namespace tokenizers{
+	std::vector<tokenizers::token> character_tokenizer(std::string filecontent);
+}

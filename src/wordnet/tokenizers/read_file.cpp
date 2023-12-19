@@ -1,11 +1,14 @@
-#include <ifstream>
+#include <fstream>
 #include <iostream>
-namespace tokenizers{
-	// Read wordlist, return as raw string
-	std::string read_wordlist(std::string filepath){
-		std::ifstream filestream(filepath);
-		std::string data(std::istreambuf_iterator<char>(filestream),
-			std::istreambuf_iterator<char>());	
-		return data;	
-	}
+#include "read_file.hpp"
+// Read wordlist, return as raw string
+std::string tokenizers::read_wordlist(std::string& filepath){
+	std::ifstream filestream(filepath);
+	std::string data = std::string{std::istreambuf_iterator<char>(filestream),
+		std::istreambuf_iterator<char>()};	
+	return data;	
+}
+bool tokenizers::file_exists(std::string& filepath){
+	std::ifstream f(filepath.c_str());
+	return f.good();	
 }

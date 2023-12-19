@@ -1,4 +1,7 @@
 #pragma once
 #include <string>
-std::string tokenizers::read_wordlist(std::string filepath);
+namespace tokenizers{
+	std::string read_wordlist(std::string& filepath);
+	bool file_exists(std::string& filepath);
+}
 

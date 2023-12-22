@@ -2,6 +2,7 @@
 #include "write_tokens.hpp"
 #include "character_tokenizer.hpp"
 #include "read_file.hpp"
+#include "multichar_tokenizer.hpp"
 #include <iostream>
 #include <vector>
 
@@ -29,11 +30,15 @@ int main(int argc, char *argv[]){
 		case 1: {
 				std::cout << "Using character tokenization." << std::endl;
 				auto file_tokens = tokenizers::character_tokenizer(file_contents);
-				std::cout << "Saving to file to tokens.txt.." << std::endl;
+				std::cout << "Saving to tokens.txt.." << std::endl;
 				tokenizers::write_tokens(file_tokens, "tokens.txt");
 				break;
 			}
 		case 2:{ 
+				std::cout << "Using multichar tokenizer." << std::endl;
+				auto file_tokens = tokenizers::multichar_tokenizer(file_contents);
+				std::cout << "Saving to tokens.txt.." << std::endl;
+				tokenizers::write_tokens(file_tokens, "tokens.txt");
 			       break;
 		       }
 		case 3:

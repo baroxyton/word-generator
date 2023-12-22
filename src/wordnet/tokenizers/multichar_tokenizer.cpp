@@ -32,7 +32,7 @@ std::vector<tokenizers::token> tokenizers::multichar_tokenizer(std::string &file
 				{
 					std::vector<std::string> split_string;
 					boost::split(split_string, current_strings[j], boost::is_any_of("\n"));
-					current_strings[j] = split_string[0];
+					current_strings[j] = split_string[split_string.size() - 1];
 				}
 			}
 		}

@@ -3,9 +3,10 @@
 #include "read_file.hpp"
 #include <vector>
 #include <string>
+#include <unordered_set>
 #include <iostream>
 
-std::vector<std::string> integers{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+std::unordered_set<std::string> integers{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
 std::vector<tokenizers::token> tokenizers::read_tokens(std::string filename)
 {
   if (!file_exists(filename))
@@ -35,7 +36,7 @@ std::vector<tokenizers::token> tokenizers::read_tokens(std::string filename)
       continue;
     }
     if(!in_tokenid && !in_token && currentstr == "\t"){
-     in_token = true;
+      in_token = true;
       continue;
     }
     if(in_token && currentstr == "\n" || i == file_content.size() - 1){
@@ -48,7 +49,8 @@ std::vector<tokenizers::token> tokenizers::read_tokens(std::string filename)
       token_content += currentstr;
     }
 
-  
+
   } 
+  return result;
 }
-}
+

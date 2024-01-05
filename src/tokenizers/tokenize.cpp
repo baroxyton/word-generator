@@ -17,8 +17,8 @@ tokenizers::tokenize_string(std::vector<tokenizers::token> &tokens,
   std::vector<token> result;
   int token_begin = 0;
   while (token_begin < word.size()) {
-    for (int i = max_token_length; i != 1; i--) {
-      if ((word.size() - 1 - i) < 0) {
+    for (int i = std::min<int>(max_token_length, word.size() - token_begin); i != 0; i--) {
+      if ((word.size() - 1 - i) <= 0) {
         continue;
       }
       if (token_map.find(word.substr(token_begin, i)) != token_map.end()) {

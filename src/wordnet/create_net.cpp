@@ -42,10 +42,14 @@ network::Network network::create_net(std::string filename,
     for (auto word_token : word_tokens) {
       int last_token = i==0 ? 0 : word_tokens[i-1].id;
       if(find_layer_tokindex(output.layers[i+1], word_token.id) == -1){
-        output.layers[i+1].push_back(weighted_token{word_token, std::vector<double>{}});
-        output.layers[i][find_layer_tokindex(output.layers[i], last_token)].weigths_out.push_back(0);
+        output.layers[i+1].push_back(weighted_token{word_token, std::vector<double>(output.layers[i+2].size())});
+
+        for(weighted_token& weighted_tok : output.layers[i]){
+          weighted_tok.weigths_out.push_back(0);
+        }
+        //output.layers[i][find_layer_tokindex(output.layers[i], last_token)].weigths_out.push_back(0);
       }
-      output.layers[i][find_layer_tokindex(output.layers[i], last_token)].weigths_out[find_layer_tokindex(output.layers[i+1], word_token.id)]++;
+     output.layers[i][find_layer_tokindex(output.layers[i], last_token)].weigths_out[find_layer_tokindex(output.layers[i+1], word_token.id)]++;
       i++;
     }
   }

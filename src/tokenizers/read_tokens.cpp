@@ -19,8 +19,8 @@ std::vector<tokenizers::token> tokenizers::read_tokens(std::string filename)
 
   bool in_tokenid = true;
   bool in_token = false;
-  std::string token_content;
-  std::string token_id;
+  std::string token_content = "";
+  std::string token_id = "";
 
   for(int i = 0; i < file_content.size(); i++){
     auto currentstr = std::string{file_content[i]};
@@ -33,16 +33,14 @@ std::vector<tokenizers::token> tokenizers::read_tokens(std::string filename)
       id = atoi(token_id.c_str());
       in_tokenid = false;
       token_id = "";
-      continue;
-    }
-    if(!in_tokenid && !in_token && currentstr == "\t"){
       in_token = true;
       continue;
     }
-    if(in_token && currentstr == "\n" || i == file_content.size() - 1){
+    if(in_token && (currentstr == "\n" || i == file_content.size() - 1)){
       in_token = false;
       in_tokenid = true;
       result.push_back(token{id, token_content});
+      token_content = "";
       continue;
     }
     if(in_token){

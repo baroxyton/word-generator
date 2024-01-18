@@ -18,7 +18,7 @@ std::vector<tokenizers::token> tokenizers::multichar_tokenizer(std::string &file
 				break;
 			}
 			current_strings[j] += std::string{file_content[i + j]};
-			if (current_strings[j].size() == j)
+			if (current_strings[j].size() - 1 == j)
 			{
 				if (!boost::algorithm::contains(current_strings[j], "\n"))
 				{

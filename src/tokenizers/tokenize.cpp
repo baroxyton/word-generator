@@ -21,7 +21,7 @@ tokenizers::tokenize_string(std::vector<tokenizers::token> &tokens,
       if ((word.size() - 1 - i) <= 0) {
         continue;
       }
-      if (token_map.find(word.substr(token_begin, i)) != token_map.end()) {
+      if (word.size() >= token_begin + i && token_map.find(word.substr(token_begin, i)) != token_map.end()) {
         int found_token = token_map[word.substr(token_begin, i)];
         result.push_back(token{found_token, word.substr(token_begin, i)});
         token_begin += i;

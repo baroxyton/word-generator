@@ -6,18 +6,18 @@
 #include <ctime>   // for time
 
 // Function to choose a random index based on weights
-size_t choose_random_index(const std::vector<double>& weights) {
-    double random_value = (rand() / (RAND_MAX + 1.0)) * std::accumulate(weights.begin(), weights.end(), 0.0);
+size_t choose_random_index(std::vector<double>* weights) {
+    double random_value = (rand() / (RAND_MAX + 1.0)) * std::accumulate(weights->begin(), weights->end(), 0.0);
     double cumulative = 0.0;
 
-    for (size_t i = 0; i < weights.size(); ++i) {
-        cumulative += weights[i];
+    for (size_t i = 0; i < weights->size(); ++i) {
+        cumulative += weights->at(i);
         if (random_value < cumulative) {
             return i;
         }
     }
 
-    return weights.size() - 1;
+    return weights->size() - 1;
 }
 
 // Function for generating a fake word
@@ -27,11 +27,11 @@ std::string generate_fake_word(const network::Network& net) {
     size_t current_token = 0;
 
     while (current_token != 1) { // Continue until END token is reached
-        const auto& current_weighted_token = net.layers[current_layer][current_token];
-        fake_word += current_weighted_token.token.token;
+        const auto& current_weighted_token = net.layers[current_layer]->at(current_token);
+        fake_word += current_weighted_token->token->token;
         
         // Choose the next token based on out_weights
-        current_token = choose_random_index(current_weighted_token.weigths_out);
+        current_token = choose_random_index(current_weighted_token->weigths_out);
         current_layer++;
     }
 
@@ -51,8 +51,8 @@ int main(int argc, char *argv[]) {
 
     // Display BEGIN weights (for illustration)
     std::cout << "BEGIN WEIGHTS" << std::endl;
-    for (const auto& weighted_tok : net.layers[0]) {
-        std::cout << weighted_tok.token.token << std::endl;
+    for (const auto& weighted_tok : *net.layers[0]) {
+        std::cout << weighted_tok->token->token << std::endl;
     }
 
     // Generate a fake word

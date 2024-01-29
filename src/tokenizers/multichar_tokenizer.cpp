@@ -6,7 +6,7 @@
 
 std::vector<tokenizers::token> tokenizers::multichar_tokenizer(std::string &file_content)
 {
-	int TOKEN_COUNT_THRESHHOLD = 3;
+	int TOKEN_COUNT_THRESHHOLD = 50;
 	std::unordered_map<std::string, int> tokens;
 	std::vector<std::string> current_strings(MULTICHAR_COUNT);
 	for (int i = 0; i < file_content.size(); i++)

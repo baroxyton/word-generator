@@ -14,9 +14,13 @@ CREATE_NET_SRC = ./src/tokenizers/read_file.cpp ./src/tokenizers/tokenize.cpp ./
 
 CREATE_NET_BIN = build/create_net
 
+GENERATE_WORD_BIN = build/generate_word
+
+GENERATE_WORD_SRC = ./src/tokenizers/read_file.cpp ./src/tokenizers/read_tokens.cpp ./src/wordnet/read_wordnet.cpp ./src/wordnet/generate_word_cli.cpp
+
 
 .PHONY: all
-all: $(TOKENIZER_BIN) $(CREATE_NET_BIN)
+all: $(TOKENIZER_BIN) $(CREATE_NET_BIN) $(GENERATE_WORD_BIN)
 
 $(TOKENIZER_BIN): $(TOKENIZER_SRC)
 	$(CXX) $(CXXFLAGS) $^ -o $@
@@ -24,9 +28,12 @@ $(TOKENIZER_BIN): $(TOKENIZER_SRC)
 $(CREATE_NET_BIN): $(CREATE_NET_SRC)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
+$(GENERATE_WORD_BIN) : $(GENERATE_WORD_SRC)
+	$(CXX) $(CXXFLAGS) $^ -o $@
+
 
 
 .PHONY: clean
 clean:
-	rm $(TOKENIZER_BIN) $(CREATE_NET_BIN)
+	rm $(TOKENIZER_BIN) $(CREATE_NET_BIN) $(GENERATE_WORD_BIN)
 

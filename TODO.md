@@ -1,6 +1,5 @@
 - [ ] Tokenizers
-- [ ] Word graph generator
-- [ ] Custom binary format
-- [ ] Word generator
-- [ ] Word 'englishness' checker
+- [x] Word graph generator
+- [x] Custom binary format
+- [x] Word generator
 - [ ] Determine language of word

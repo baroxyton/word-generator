@@ -30,7 +30,13 @@ network::Network *network::read_net(std::string filename) {
   for (char ch : raw_network) {
     std::string chstr{ch};
     if(chstr == "," || chstr == "\t" || chstr == "\n"){
-      float num = std::stof(current_num.c_str());
+      float num;
+      if(current_num == ""){
+        num = 0;
+      }
+      else{
+      num = std::stof(current_num.c_str());
+      }
       current_num = "";
       if(tokid == -1){
         tokid = num;

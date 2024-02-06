@@ -17,7 +17,9 @@ void network::write_net(std::string filename, Network* net) {
       layer_output += std::to_string(tok->token->id);
       for (double weight : *tok->weigths_out) {
        layer_output += ",";
+      if(weight >= 1E-6){
        layer_output += std::to_string(weight);
+        }
       }
     }
     output += layer_output;

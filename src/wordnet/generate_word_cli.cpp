@@ -6,15 +6,21 @@
 #include <cstdlib> // for rand and srand
 #include <iostream>
 #include <map>
-#include <numeric>
+#include <string>
 #include <vector>
-size_t choose_random_index(std::vector<double> *weights) {
-  double random_value = (rand() / (RAND_MAX + 1.0)) *
-                        std::accumulate(weights->begin(), weights->end(), 0.0);
+size_t choose_random_index(std::vector<double> *weights, int i) {
+  double random_value = (rand() / (RAND_MAX + 1.0));
   double cumulative = 0.0;
 
   for (size_t i = 0; i < weights->size(); ++i) {
     cumulative += weights->at(i);
+    /*
+    if(i <= 2){
+      bool is_positive = (rand() / (RAND_MAX + 1.0)) < 0.5;
+      int multiplier = is_positive?1:-1;
+      cumulative += (rand() / (RAND_MAX + 1.0)) / 50 * -1 * multiplier;
+    }
+    */
     if (random_value < cumulative) {
       return i;
     }
@@ -35,7 +41,7 @@ std::string generate_word(network::Network *net,
     result += token_map[current_weighted_token->token->id];
 
     // Choose the next token based on out_weights
-    token = choose_random_index(current_weighted_token->weigths_out);
+    token = choose_random_index(current_weighted_token->weigths_out, layer);
     // std::cout << net->layers[layer+1]->at(token)->token->id << std::endl;
     if (net->layers[layer + 1]->at(token)->token->id == 1) {
       break;
@@ -61,6 +67,10 @@ int main(int argc, char *argv[]) {
     std::cout << "Please enter token filename" << std::endl;
     exit(1);
   }
+  int num_words = 1;
+  if (argc >= 4) {
+    num_words = std::stoi(argv[3]);
+  }
   std::string networkfile{argv[1]};
   std::string tokenfile{argv[2]};
 
@@ -76,7 +86,9 @@ int main(int argc, char *argv[]) {
   for (auto tok : all_tokens) {
     token_map[tok.id] = tok.token;
   }
-  std::string word = generate_word(net, all_tokens);
-  std::cout << "Word generated: " << word << std::endl;
+  for (int i = 0; i < num_words; i++) {
+    std::string word = generate_word(net, all_tokens);
+    std::cout << "Word generated: " << word << std::endl;
+  }
   return 0;
 }

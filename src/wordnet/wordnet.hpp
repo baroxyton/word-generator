@@ -12,6 +12,4 @@ public:
   std::string get_output(int length,
                          std::vector<tokenizers::token> start_tokens);
 };
-int find_layer_tokindex(std::vector<network::weighted_token*>* layer,
-                        int tokenid);
 }; // namespace network

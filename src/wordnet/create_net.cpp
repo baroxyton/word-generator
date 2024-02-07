@@ -7,7 +7,30 @@
 #include <iostream>
 #include <numeric>
 #include <string>
+#include <unordered_map>
+#include <utility>
 #include <vector>
+
+struct pair_hash {
+    std::size_t operator()(const std::pair<int, int>& p) const {
+        return std::hash<int>()(p.first) ^ std::hash<int>()(p.second);
+    }
+};
+
+std::unordered_map<std::pair<int,int>, int, pair_hash> tokindexes;
+
+int find_layer_tokindex(int layer, int token){
+  auto result = tokindexes.find(std::make_pair(layer, token));
+  if(result == tokindexes.end()){
+    return -1;
+  }
+  return result->second;
+}
+void set_layer_tokindex(int layer, int token, int index){
+  index = std::max(0, index);
+  tokindexes[std::make_pair(layer, token)] = index; 
+  return;
+}
 
 void network::normalize_weights(std::vector<double> *weights) {
   double total = std::accumulate(weights->begin(), weights->end(), 0.0);
@@ -46,9 +69,13 @@ network::Network network::create_net(std::string filename,
   Network output;
   output.layers.push_back(new std::vector<weighted_token *>{new weighted_token{
       new tokenizers::token{0, "<BEGIN>"}, new std::vector<double>(0)}});
-
+          set_layer_tokindex(0, 0, 0);
+int wc = 0;
   for (auto word : wordlist) {
+    wc++;
+    if(wc % 1000 == 0){
     std::cout << word << std::endl;
+    }
     std::vector<tokenizers::token> word_tokens =
         tokenizers::tokenize_string(tokens, word);
 
@@ -65,11 +92,12 @@ network::Network network::create_net(std::string filename,
     word_tokens.push_back(tokenizers::token{1, "<END>"});
     for (auto word_token : word_tokens) {
       int last_token = i == 0 ? 0 : word_tokens[i - 1].id;
-      if (find_layer_tokindex(output.layers[i + 1], word_token.id) == -1) {
+      if (find_layer_tokindex(i + 1, word_token.id) == -1) {
         try {
           output.layers[i + 1]->push_back(new weighted_token{
               new tokenizers::token{word_token.id, word_token.token},
               new std::vector<double>(output.layers[i + 2]->size())});
+          set_layer_tokindex(i+1, word_token.id, output.layers[i+1]->size() - 1);
         } catch (std::bad_alloc) {
           std::cout << "ERROR_badalloc [" << output.layers[i + 2]->size() << "]"
                     << std::endl;
@@ -85,9 +113,9 @@ network::Network network::create_net(std::string filename,
         // last_token)].weigths_out.push_back(0);
       }
       output.layers[i]
-          ->at(find_layer_tokindex(output.layers[i], last_token))
+          ->at(find_layer_tokindex(i, last_token))
           ->weigths_out->at(
-              find_layer_tokindex(output.layers[i + 1], word_token.id))++;
+              find_layer_tokindex(i + 1, word_token.id))++;
       i++;
     }
   }
@@ -99,7 +127,7 @@ network::Network network::create_net(std::string filename,
     std::vector<int> token_used_total(output.layers[i + 1]->size());
     for (int j = 0; j < output.layers[i]->size(); j++) {
       for (int k = 0; k < output.layers[i + 1]->size(); k++) {
-        std::cout << "TEST " << output.layers[i]->at(j)->weigths_out->at(k);
+        //std::cout << "TEST " << output.layers[i]->at(j)->weigths_out->at(k);
         token_used_total[k] += (int)output.layers[i]->at(j)->weigths_out->at(k);
       }
     }

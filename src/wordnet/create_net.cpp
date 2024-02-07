@@ -52,6 +52,10 @@ network::Network network::create_net(std::string filename,
   }
   std::vector<tokenizers::token> tokens =
       tokenizers::read_tokens(token_filename);
+
+  std::unordered_map<std::string, int>* token_map = tokenizers::tokens_to_map(tokens);
+  int max_toklen = tokenizers::get_max_toklen(tokens);
+
   std::vector<std::string> wordlist;
   std::string wordlist_raw = tokenizers::read_wordlist(filename);
   std::string current_word;
@@ -77,7 +81,7 @@ int wc = 0;
     std::cout << word << std::endl;
     }
     std::vector<tokenizers::token> word_tokens =
-        tokenizers::tokenize_string(tokens, word);
+        tokenizers::tokenize_string(token_map, word, max_toklen);
 
     while (output.layers.size() < word_tokens.size() + 5) {
       output.layers.push_back(new std::vector<weighted_token *>(0));
